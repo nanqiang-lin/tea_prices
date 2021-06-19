@@ -64,7 +64,8 @@ const TeaPrices = () => {
       <button onClick={onClickHandler}>提交</button>
     </p>
     <h3>价格</h3>
-    <table>
+    {
+      isLoading ? <p>Loading...</p> : <table>
       <thead>
         <tr>
           <th>id</th>
@@ -73,14 +74,13 @@ const TeaPrices = () => {
           <th>价格</th>
         </tr>
       </thead>
-      {
-        !isLoading && <tbody>
-          {
-            tds
-          }
-        </tbody>
-      }
+      <tbody>
+        {
+          tds
+        }
+      </tbody>
     </table>
+    }
     {
       error && <p className="error">{ error }</p>
     }
