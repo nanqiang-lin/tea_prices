@@ -2,11 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import sp from 'superagent'
 import cheerio from 'cheerio'
 
-type Data = {
-  id: string,
-  name: string
-}
-
 type Info = {
   id: string,
   name: string,
@@ -105,14 +100,13 @@ export default async function handler(
           const info = id && (await getTeaInfoById(id));
           infoList.push(info);
         } catch (e) {
-          console.log(e);
-          infoList.push(e);
+          console.log(e.status);
+          return res.status(500).end(`Something went wrong!`)
         }
       }
-      const data = await getTeaInfoById(id as string)
-      console.log(infoList)
+      console.log(infoList, '===========')
       // Get data from your database
-      res.status(200).json({ id, data: infoList })
+      res.status(200).json({ id: ids, data: infoList })
       break
     // case 'PUT':
     //   // Update or create data in your database
