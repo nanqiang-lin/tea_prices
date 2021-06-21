@@ -1,19 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import sp from 'superagent'
+import puppeteer from 'puppeteer'
 import cheerio from 'cheerio'
 
 import { transformPriceNum } from '../../../common/utils';
 
-type Info = {
-  id: string,
-  name: string,
-  number: string,
-  price: string
-}
-
 const pattern = new RegExp("[\u4e00-\u9fa5]+")
 const getTeaInfoById = async (id: string) => {
-  const URL = `https://www.donghetea.com/goods.php?id=${id}`;
+  const URL = `https://tweb.donghetea.com/#/pages/sale/productDetail?id=${id}`;
+  const API_URL = `https://tweb.donghetea.com/tea/api/portal/product/getUnitList/?productId=${id}`;
   let info: any = {},
     nameText,
     unitText,
@@ -21,12 +16,28 @@ const getTeaInfoById = async (id: string) => {
     priceTextNumber;
 
   await (async () => {
-    let html = await sp.get(URL);
-    let $ = cheerio.load(html.text);
-    nameText = $(".textInfo h1").text();
-    unitText = $(".buyli ul .pro:nth-child(3) span").text();
-    priceText = $(".shop_sb").text();
-    priceTextNumber = priceText.slice(1, -3);
+    const browser = await puppeteer.launch({
+      /**
+       * Use the default headless mode (don't show the browser).
+       */
+      headless: true,
+    });
+
+    const page = await browser.newPage();
+
+    await page.goto(URL);
+    // await page.waitForSelector('.good-name')
+    await page.waitForRequest(API_URL);
+    // await page.waitForRequest('https://tweb.donghetea.com/tea/api/portal/product/getUnitList/?productId=1766');
+    // await page.screenshot({path: 'full.png', fullPage: true});
+
+    const content = await page.content();
+
+    const $ = cheerio.load(content);
+    nameText = $(".good-name").text();
+    unitText = $(".unitText span").text();
+    priceText = $(".good-price").text();
+    priceTextNumber = priceText.slice(1, -2);
 
     const nameTextArray = nameText.split(" ");
     info.id = id;
@@ -43,6 +54,7 @@ const getTeaInfoById = async (id: string) => {
     const price = 
             transformPriceNum(priceTextNumber) / theAllUnits;
     info.price = `${Math.round(price)} ${minUnit}`;
+    await browser.close();
   })();
   return info;
 };
