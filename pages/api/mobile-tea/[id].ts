@@ -61,7 +61,7 @@ const getTeaInfoById = async (id: string) => {
     const price = 
             transformPriceNum(priceTextNumber) / theAllUnits;
     info.price = `${Math.round(price)} ${minUnit}`;
-    await browser.close();
+    // await browser.close();
   })();
   return info;
 };
@@ -79,7 +79,7 @@ export default async function handler(
     case 'GET':
       const requests = []
       for (let id of ids) {
-        requests.push(getTeaInfoById(id))
+        id && requests.push(getTeaInfoById(id))
       }
       try {
         const infoList = await Promise.all(requests)
