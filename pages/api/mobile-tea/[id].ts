@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import sp from 'superagent'
 import puppeteer from 'puppeteer'
 import cheerio from 'cheerio'
+import chrome from 'chrome-aws-lambda'
 
 import { transformPriceNum } from '../../../common/utils';
 
@@ -16,12 +17,18 @@ const getTeaInfoById = async (id: string) => {
     priceTextNumber;
 
   await (async () => {
-    const browser = await puppeteer.launch({
-      args: [ '--proxy-server=127.0.0.1:9876' ]
-    });
+    const browser = await puppeteer.launch(
+      process.env.NODE_ENV === 'production'
+      ? {
+          args: chrome.args,
+          executablePath: await chrome.executablePath,
+          headless: chrome.headless,
+        }
+      : {}
+    );
 
     const page = await browser.newPage();
-    page.setDefaultTimeout(5000)
+    page.setDefaultTimeout(8000)
 
     await page.goto(URL);
     // await page.waitForSelector('.good-name')
