@@ -24,6 +24,7 @@ const getTeaInfoById = async (id: string) => {
     });
 
     const page = await browser.newPage();
+    page.setDefaultTimeout(5000)
 
     await page.goto(URL);
     // await page.waitForSelector('.good-name')
