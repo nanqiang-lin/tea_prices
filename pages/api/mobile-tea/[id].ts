@@ -7,6 +7,17 @@ import chrome from 'chrome-aws-lambda'
 import { transformPriceNum } from '../../../common/utils';
 
 const pattern = new RegExp("[\u4e00-\u9fa5]+")
+
+const getBrowser = async () => await puppeteer.launch(
+  process.env.NODE_ENV === 'production'
+  ? {
+      args: chrome.args,
+      executablePath: await chrome.executablePath,
+      headless: chrome.headless,
+    }
+  : {}
+);
+
 const getTeaInfoById = async (id: string) => {
   const URL = `https://tweb.donghetea.com/#/pages/sale/productDetail?id=${id}`;
   const API_URL = `https://tweb.donghetea.com/tea/api/portal/product/getUnitList/?productId=${id}`;
@@ -17,16 +28,7 @@ const getTeaInfoById = async (id: string) => {
     priceTextNumber;
 
   await (async () => {
-    const browser = await puppeteer.launch(
-      process.env.NODE_ENV === 'production'
-      ? {
-          args: chrome.args,
-          executablePath: await chrome.executablePath,
-          headless: chrome.headless,
-        }
-      : {}
-    );
-
+    const browser = await getBrowser()
     const page = await browser.newPage();
     page.setDefaultTimeout(8000)
 
