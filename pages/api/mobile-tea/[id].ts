@@ -78,7 +78,7 @@ export default async function handler(
           infoList.push(info);
         } catch (e) {
           console.log(e.status);
-          return res.status(500).end(`Something went wrong!`)
+          return res.status(500).end(`Something went wrong! ${e.status} ${JSON.stringify(e)}`)
         }
       }
       console.log(infoList, '===========')

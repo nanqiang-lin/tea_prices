@@ -60,23 +60,23 @@ const TeaPrices = () => {
       <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     </Head>
     <h3>输入茶叶的 id(多个使用英文 , 隔开)</h3>
+    {/* 2893,2233,2853,2671,2814,2248,2285 */}
     <div>
       <p>这个网址是：https://tweb.donghetea.com/#/pages/sale/productDetail?id=xxx</p>
       <p>可一次输入 6-8 个 id</p>
-      {/* 2893,2233,2853,2671,2814,2248,2285 */}
       <textarea name="teaIds" id="" cols={30} rows={10} value={ids} onChange={onChangeHandler} />
       <p>
         <button onClick={() => onClickHandler(true)}>提交</button>
       </p>
     </div>
-    <div>
+    {/* 2164,2459,2462,2287,2065,2066,2374,2325 */}
+    {/* <div>
       <p>这个网址是：https://www.donghetea.com/goods.php?id=xxx</p>
-      {/* 2164,2459,2462,2287,2065,2066,2374,2325 */}
       <textarea name="teaIds" id="" cols={30} rows={10} value={ids} onChange={onChangeHandler} />
       <p>
         <button onClick={() => onClickHandler()}>提交</button>
       </p>
-    </div>
+    </div> */}
     <h3>价格</h3>
     {
       isLoading ? <p>Loading...</p> : <table>
