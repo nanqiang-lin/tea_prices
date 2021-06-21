@@ -46,7 +46,7 @@ const TeaPrices = () => {
       return
     }
     if (isLoading) return
-    const apiUrl = mobile ? `/api/mobile-tea/${ids}` : `/api/tea/${ids}`
+    const apiUrl = mobile ? `/api/be-api/${ids}` : `/api/tea/${ids}`
     sendRequest({
       url: apiUrl
     }, applyData)
