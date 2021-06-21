@@ -77,24 +77,19 @@ export default async function handler(
   const ids = (id as string).split(',')
   switch (method) {
     case 'GET':
-      const infoList = [];
+      const requests = []
       for (let id of ids) {
-        try {
-          const info = id && (await getTeaInfoById(id));
-          infoList.push(info);
-        } catch (e) {
-          console.log(e.status);
-          return res.status(500).end(`Something went wrong! ${e.status} ${JSON.stringify(e)}`)
-        }
+        requests.push(getTeaInfoById(id))
       }
-      console.log(infoList, '===========')
-      // Get data from your database
-      res.status(200).json({ id: ids, data: infoList })
+      try {
+        const infoList = await Promise.all(requests)
+        console.log(infoList, '===========')
+        res.status(200).json({ id: ids, data: infoList })
+      }  catch (e) {
+        console.log(e.status);
+        return res.status(500).end(`Something went wrong! ${e.status} ${JSON.stringify(e)}`)
+      }
       break
-    // case 'PUT':
-    //   // Update or create data in your database
-    //   res.status(200).json({ id, name: name || `User ${id}` })
-    //   break
     default:
       res.setHeader('Allow', ['GET', 'PUT'])
       res.status(405).end(`Method ${method} Not Allowed`)
