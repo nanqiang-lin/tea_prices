@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import sp from 'superagent'
 import puppeteer from 'puppeteer'
 import cheerio from 'cheerio'
 import chrome from 'chrome-aws-lambda'
@@ -30,7 +29,8 @@ const getTeaInfoById = async (id: string) => {
   await (async () => {
     const browser = await getBrowser()
     const page = await browser.newPage();
-    page.setDefaultTimeout(8000)
+    // page.setDefaultTimeout(8000)
+    page.setUserAgent('Opera/9.80 (J2ME/MIDP; Opera Mini/5.1.21214/28.2725; U; ru) Presto/2.8.119 Version/11.10');
 
     await page.goto(URL);
     // await page.waitForSelector('.good-name')
