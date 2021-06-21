@@ -17,10 +17,7 @@ const getTeaInfoById = async (id: string) => {
 
   await (async () => {
     const browser = await puppeteer.launch({
-      /**
-       * Use the default headless mode (don't show the browser).
-       */
-      headless: true,
+      args: [ '--proxy-server=127.0.0.1:9876' ]
     });
 
     const page = await browser.newPage();
