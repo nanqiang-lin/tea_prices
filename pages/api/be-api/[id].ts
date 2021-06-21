@@ -3,6 +3,7 @@ import axios from 'axios'
 
 import { transformPriceNum } from '../../../common/utils';
 
+const pattern = new RegExp("[\u4e00-\u9fa5]+")
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -31,14 +32,14 @@ const getTeaInfoById = async (id: string) => {
   
       const allUnits: string[] = unitText.split(' ')
       const units = allUnits.filter(unit => !(unit.includes('克') || unit.includes('g')))
-      const minUnit = data.minPriceUnit
+      const minUnit = data.minPriceUnit || units[0].match(pattern)?.[0] || ''
       let theAllUnits = 1
       units.forEach(unit => theAllUnits *= parseFloat(unit))
       const price = priceTextNumber / theAllUnits;
       info.price = `${Math.round(price)} ${minUnit}`;
     })();
   } catch (e) {
-    return e
+    throw  e
   }
   return info
 };
