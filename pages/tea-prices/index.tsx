@@ -31,7 +31,7 @@ const TeaPrices = () => {
           <td>{ item.id }</td>
           <td>{ item.number }</td>
           <td>{ item.name }</td>
-          <td>{ item.price }</td>
+          <td>¥ { item.price }</td>
         </tr>
       )
     })
